@@ -7,8 +7,9 @@
 .slot{animation:pop .28s ease-out both;animation-delay:calc(var(--i,0) * 18ms)}
 .pimg.on{animation:bob 1.6s ease-in-out infinite}
 .big.bump{animation:bump .25s ease-out}
-.tile{transition:transform .08s,background .12s}
-.tile:hover{transform:translateY(-2px)}
+.tile,.tab{transition:transform .08s,background .12s}
+.tile:hover,.tab:hover{transform:translateY(-2px)}
+.tab[aria-selected=true]{transform:translateY(-3px)}
 .tile:active{transform:scale(.94)}
 
 @media (prefers-reduced-motion:reduce){

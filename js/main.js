@@ -1,22 +1,40 @@
 import { loadItems } from "./data.js";
 import { calcular } from "./calc.js";
-import { renderGrid, showPicked, renderResult } from "./ui.js";
+import { CATEGORIES } from "./categories.js";
+import { renderGrid, showPicked, renderResult, buildTabs, updateTabs } from "./ui.js";
 
 const $ = (id) => document.getElementById(id);
-const q = $("q"), nEl = $("n"), chips = $("chips");
-let filter = 0, picked = null, ITEMS = [];
+const q = $("q"), nEl = $("n");
+let cat = "all", picked = null, ITEMS = [];
 
 const norm = (t) => t.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+
+function counts() {
+  const c = { all: ITEMS.length };
+  for (const i of ITEMS) c[i.cat] = (c[i.cat] || 0) + 1;
+  return c;
+}
 
 function pick(it) {
   picked = it;
   showPicked(it); refreshGrid(); update(); nEl.focus();
 }
 
+// Con texto en el buscador se busca en todas las categorías
 function refreshGrid() {
   const term = norm(q.value.trim());
-  const rows = ITEMS.filter((i) => (!filter || i.stack === filter) && norm(`${i.name} ${i.en} ${i.id}`).includes(term));
+  const rows = ITEMS.filter((i) =>
+    term ? norm(`${i.name} ${i.en} ${i.id}`).includes(term) : cat === "all" || i.cat === cat);
   renderGrid(rows, picked && picked.id, pick);
+  const label = term ? "Resultados de la búsqueda" : CATEGORIES.find((c) => c.key === cat).label;
+  $("status").textContent = ITEMS.length ? `${label} · ${rows.length} items` : "";
+}
+
+function selectCat(key) {
+  cat = key; q.value = "";
+  updateTabs(CATEGORIES, cat, counts());
+  refreshGrid();
+  $("grid").scrollTop = 0;
 }
 
 function update() {
@@ -30,23 +48,14 @@ function update() {
   renderResult(total, s, calcular(total, s), picked);
 }
 
-[["Todos", 0], ["64", 64], ["16", 16], ["No apilables", 1]].forEach(([label, v]) => {
-  const b = document.createElement("button");
-  b.type = "button"; b.className = "chip"; b.textContent = label; b.setAttribute("aria-pressed", v === 0);
-  b.onclick = () => {
-    filter = v;
-    [...chips.children].forEach((c) => c.setAttribute("aria-pressed", c === b));
-    refreshGrid();
-  };
-  chips.appendChild(b);
-});
-
+buildTabs(CATEGORIES, selectCat);
+updateTabs(CATEGORIES, cat, counts());
 q.addEventListener("input", refreshGrid);
 nEl.addEventListener("input", update);
 $("grid").innerHTML = '<p class="empty">Cargando items desde la API…</p>';
 update();
-loadItems().then(({ items, fromApi }) => {
+loadItems().then(({ items }) => {
   ITEMS = items;
-  $("status").textContent = fromApi ? `${items.length} items cargados desde la API` : "";
+  updateTabs(CATEGORIES, cat, counts());
   refreshGrid();
 });

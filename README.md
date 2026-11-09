@@ -7,7 +7,8 @@ Ejemplo: 500 items de un item que se apila de 64 son **7 stacks y 52 items**.
 ## Qué hace
 
 - Lista de más de mil items y bloques con su tamaño de stack real (64, 16 o 1).
-- Búsqueda en español e inglés, y filtros por tamaño de stack.
+- Pestañas con icono por categoría (construcción, naturaleza, minerales, redstone, comida, combate, etc.).
+- Búsqueda en español e inglés, que revisa todas las categorías a la vez.
 - Muestra el resultado en stacks y items sueltos.
 - Dibuja los espacios del inventario y calcula cuántos cofres dobles o shulkers ocupa.
 - Animaciones suaves, desactivadas si el sistema pide reducir movimiento.
@@ -24,6 +25,7 @@ js/
   config.js         URLs de las APIs y constantes
   data.js           carga de items (API) y lista de respaldo
   calc.js           cálculo de stacks
+  categories.js     categorías de los items (reglas por id)
   ui.js             dibujo de la pantalla e imágenes
   main.js           eventos y lógica principal
 images/ui/          logo, favicon y placeholder
@@ -47,6 +49,7 @@ No se descarga nada: todo se pide a APIs públicas al abrir la página.
 - Si la API de items no responde, se carga una lista reducida de items comunes.
 - Los nombres salen del archivo de idioma de la última versión estable de Mojang (español por defecto; se cambia con `LANG_CODE` en `js/config.js`).
 - Si Mojang no responde, se usa un diccionario propio en español para los items comunes y el nombre en inglés para el resto.
+- Las categorías no las publica ninguna API: se asignan con reglas por id y con `foods.json` de minecraft-data para la comida, así que alguna puede quedar en una pestaña aproximada.
 - Mojang no publica una API de imágenes ni de stacks, por eso esos datos vienen de otras fuentes.
 
 ## Cómo modificarla

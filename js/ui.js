@@ -21,11 +21,33 @@ export function setIcon(img, id) {
   img.src = urls[0];
 }
 
+// Pestañas con icono (como el inventario creativo). Se construyen una vez.
+export function buildTabs(cats, onSelect) {
+  const box = $("tabs");
+  box.innerHTML = "";
+  for (const c of cats) {
+    const b = document.createElement("button");
+    b.type = "button"; b.className = "tab"; b.dataset.key = c.key;
+    b.setAttribute("role", "tab"); b.setAttribute("aria-selected", "false");
+    const img = document.createElement("img"); img.alt = ""; setIcon(img, c.icon);
+    b.appendChild(img); b.onclick = () => onSelect(c.key); box.appendChild(b);
+  }
+}
+
+export function updateTabs(cats, active, counts) {
+  for (const b of $("tabs").children) {
+    const c = cats.find((x) => x.key === b.dataset.key);
+    const text = `${c.label} (${counts[c.key] || 0})`;
+    b.title = text; b.setAttribute("aria-label", text);
+    b.setAttribute("aria-selected", c.key === active);
+  }
+}
+
 export function renderGrid(items, selectedId, onPick) {
   const grid = $("grid");
   grid.innerHTML = "";
   if (!items.length) {
-    grid.innerHTML = '<p class="empty">No hay items con ese nombre. Escribe el stack a mano.</p>';
+    grid.innerHTML = '<p class="empty">No hay items con ese nombre.</p>';
     return;
   }
   for (const it of items) {

@@ -1,3 +1,4 @@
+import { categorize } from "./categories.js";
 import { ITEMS_APIS, MOJANG_MANIFEST, MOJANG_RESOURCES, LANG_CODE } from "./config.js";
 
 // Nombres en español para los items más comunes (el resto se muestra con su nombre en inglés)
@@ -44,8 +45,8 @@ const FALLBACK = [
 const pretty = (id) => id.split("_").filter(Boolean).map((w) => w[0].toUpperCase() + w.slice(1)).join(" ");
 const sortEs = (a, b) => a.name.localeCompare(b.name, "es");
 // Prioridad del nombre: Mojang (idioma) > diccionario propio > inglés
-const mk = (id, stack, en, lang) => ({
-  id, stack, en: en || pretty(id),
+const mk = (id, stack, en, lang, foods) => ({
+  id, stack, en: en || pretty(id), cat: categorize(id, foods),
   name: lang?.[`item.minecraft.${id}`] || lang?.[`block.minecraft.${id}`] || ES[id] || en || pretty(id)
 });
 
@@ -86,14 +87,16 @@ async function fetchFirst(urls) {
 
 // Devuelve { items, fromApi }
 export async function loadItems() {
-  const [data, lang] = await Promise.all([fetchFirst(ITEMS_APIS), loadMojangNames()]);
+  const FOODS_APIS = ITEMS_APIS.map((u) => u.replace("items.json", "foods.json"));
+  const [data, lang, foodData] = await Promise.all([fetchFirst(ITEMS_APIS), loadMojangNames(), fetchFirst(FOODS_APIS)]);
+  const foods = new Set((foodData || []).map((f) => f.name));
   if (data) {
     const items = data
       .filter((i) => i.name && i.name !== "air" && i.stackSize > 0)
-      .map((i) => mk(i.name, i.stackSize, i.displayName, lang))
+      .map((i) => mk(i.name, i.stackSize, i.displayName, lang, foods))
       .sort(sortEs);
     return { items, fromApi: true };
   }
-  const items = FALLBACK.flatMap(([s, ids]) => ids.split(" ").map((id) => mk(id, s, null, lang))).sort(sortEs);
+  const items = FALLBACK.flatMap(([s, ids]) => ids.split(" ").map((id) => mk(id, s, null, lang, foods))).sort(sortEs);
   return { items, fromApi: false };
 }
