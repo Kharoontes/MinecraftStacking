@@ -1,12 +1,23 @@
-import { IMAGES_BASE, cfg, PLACEHOLDER, MAX_SLOTS_SHOWN } from "./config.js";
+import { TEXTURES_BASE, GALLERY_BASE, ALIASES, PLACEHOLDER, MAX_SLOTS_SHOWN } from "./config.js";
 
 const $ = (id) => document.getElementById(id);
 const plural = (n, a, b) => `${n} ${n === 1 ? a : b}`;
 
-// Imagen desde la CDN; si falla, muestra el placeholder local
+// Rutas candidatas, en orden: item -> block (y sus caras) -> galería -> placeholder
+function candidates(id) {
+  const n = ALIASES[id] || id, t = TEXTURES_BASE;
+  return [
+    `${t}/item/${n}.png`, `${t}/block/${n}.png`, `${t}/item/${n}_00.png`,
+    `${t}/block/${n}_front.png`, `${t}/block/${n}_side.png`, `${t}/block/${n}_top.png`,
+    `${GALLERY_BASE}/${id}.png`, PLACEHOLDER
+  ];
+}
+
 export function setIcon(img, id) {
-  img.onerror = () => { img.onerror = null; img.src = PLACEHOLDER; };
-  img.src = `${IMAGES_BASE}/${cfg.imgVersion}/${id}.png`;
+  const urls = candidates(id);
+  let i = 0;
+  img.onerror = () => { if (++i < urls.length) img.src = urls[i]; else img.onerror = null; };
+  img.src = urls[0];
 }
 
 export function renderGrid(items, selectedId, onPick) {

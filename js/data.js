@@ -1,4 +1,4 @@
-import { ITEMS_API, IMAGES_VERSIONS_API, cfg } from "./config.js";
+import { ITEMS_API } from "./config.js";
 
 // Nombres en español para los items más comunes (el resto se muestra con su nombre en inglés)
 const ES = {
@@ -45,20 +45,10 @@ const pretty = (id) => id.split("_").map((w) => w[0].toUpperCase() + w.slice(1))
 const sortEs = (a, b) => a.name.localeCompare(b.name, "es");
 const mk = (id, stack, en) => ({ id, stack, en: en || pretty(id), name: ES[id] || en || pretty(id) });
 
-async function pickImageVersion() {
-  try {
-    const r = await fetch(IMAGES_VERSIONS_API);
-    const v = (await r.json()).versions || [];
-    const num = (s) => s.split(".").map(Number).reduce((a, n) => a * 1000 + (n || 0), 0);
-    if (v.length) cfg.imgVersion = v.reduce((a, b) => (num(b) > num(a) ? b : a));
-  } catch { /* se queda con la versión por defecto */ }
-}
-
 // Devuelve { items, fromApi }
 export async function loadItems() {
   const [res] = await Promise.allSettled([
-    fetch(ITEMS_API).then((r) => { if (!r.ok) throw new Error(r.status); return r.json(); }),
-    pickImageVersion()
+    fetch(ITEMS_API).then((r) => { if (!r.ok) throw new Error(r.status); return r.json(); })
   ]);
   if (res.status === "fulfilled" && Array.isArray(res.value)) {
     const items = res.value
