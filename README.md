@@ -10,7 +10,6 @@ Ejemplo: 500 items de un item que se apila de 64 son **7 stacks y 52 items**.
 - Búsqueda en español e inglés, y filtros por tamaño de stack.
 - Muestra el resultado en stacks y items sueltos.
 - Dibuja los espacios del inventario y calcula cuántos cofres dobles o shulkers ocupa.
-- El valor de "Items por stack" se puede cambiar a mano (útil en servidores con reglas distintas).
 - Animaciones suaves, desactivadas si el sistema pide reducir movimiento.
 
 ## Estructura
@@ -50,6 +49,12 @@ No se descarga nada: todo se pide a APIs públicas al abrir la página.
 - Si Mojang no responde, se usa un diccionario propio en español para los items comunes y el nombre en inglés para el resto.
 - Mojang no publica una API de imágenes ni de stacks, por eso esos datos vienen de otras fuentes.
 
+## Cómo modificarla
+
+- **Cambiar la versión de los datos:** edita `ITEMS_APIS` en `js/config.js`.
+- **Cambiar el idioma de los nombres:** edita `LANG_CODE` en `js/config.js` (por ejemplo `en_us`, `es_mx`, `pt_br`).
+- **Cambiar colores:** variables al inicio de `css/base.css`.
+- **Cambiar animaciones:** `css/animations.css`.
 
 ## Créditos y aviso
 
