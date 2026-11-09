@@ -44,8 +44,15 @@ No se descarga nada: todo se pide a APIs públicas al abrir la página.
 - Cada icono se pide primero a Minecraft Item API. Si falla, prueba las texturas (`item/`, `block/` y caras como `_front`, `_side`, `_top`), luego la galería y al final `images/ui/placeholder.svg`.
 - El tamaño de las imágenes se cambia con `ITEM_API_SIZE` en `js/config.js`.
 - Los items más nuevos que la rama 1.21.10 pueden salir con placeholder.
-- Si la API de items no responde, se carga una lista reducida y se avisa en pantalla.
+- Si la API de items no responde, se carga una lista reducida de items comunes.
 - Los nombres en español solo existen para los items más comunes. El resto aparece en inglés.
+
+## Cómo modificarla
+
+- **Cambiar la versión de los datos:** edita `ITEMS_APIS` en `js/config.js`.
+- **Agregar nombres en español:** añade líneas al objeto `ES` en `js/data.js` con el formato `id_del_item: "Nombre"`.
+- **Cambiar colores:** variables al inicio de `css/base.css`.
+- **Cambiar animaciones:** `css/animations.css`.
 
 ## Créditos y aviso
 

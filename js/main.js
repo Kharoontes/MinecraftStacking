@@ -43,8 +43,6 @@ $("grid").innerHTML = '<p class="empty">Cargando items desde la API…</p>';
 update();
 loadItems().then(({ items, fromApi }) => {
   ITEMS = items;
-  $("status").textContent = fromApi
-    ? `${items.length} items cargados desde la API`
-    : "No se pudo conectar a la API: mostrando una lista reducida.";
+  $("status").textContent = fromApi ? `${items.length} items cargados desde la API` : "";
   refreshGrid();
 });
