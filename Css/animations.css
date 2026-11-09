@@ -1,0 +1,16 @@
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes pop{0%{transform:scale(.4);opacity:0}70%{transform:scale(1.12)}100%{transform:scale(1);opacity:1}}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+@keyframes bump{0%{transform:scale(1)}40%{transform:scale(1.06)}100%{transform:scale(1)}}
+
+.panel{animation:rise .5s ease-out both}
+.slot{animation:pop .28s ease-out both;animation-delay:calc(var(--i,0) * 18ms)}
+.pimg.on{animation:bob 1.6s ease-in-out infinite}
+.big.bump{animation:bump .25s ease-out}
+.tile{transition:transform .08s,background .12s}
+.tile:hover{transform:translateY(-2px)}
+.tile:active{transform:scale(.94)}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+}
