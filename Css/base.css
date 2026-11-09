@@ -1,0 +1,30 @@
+:root{
+  --dirt:#4a3626; --dirt2:#5b4432; --panel:#c6c6c6; --slot:#8b8b8b;
+  --hi:#fff; --lo:#555; --ink:#303030; --grass:#4f8f2f; --grass-d:#386b20; --gold:#f2c94c;
+  --px:"Press Start 2P", ui-monospace, "Courier New", monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{
+  min-height:100vh; padding:24px 14px 48px; color:var(--ink);
+  font:16px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  background-color:var(--dirt);
+  background-image:
+    linear-gradient(45deg,var(--dirt2) 25%,transparent 25%,transparent 75%,var(--dirt2) 75%),
+    linear-gradient(45deg,var(--dirt2) 25%,transparent 25%,transparent 75%,var(--dirt2) 75%);
+  background-size:48px 48px; background-position:0 0,24px 24px;
+}
+.wrap{max-width:920px;margin:0 auto}
+.head{display:flex;align-items:center;gap:14px;margin-bottom:18px}
+.logo{image-rendering:pixelated}
+h1{font:400 clamp(15px,3.2vw,23px)/1.5 var(--px);color:#fff;text-shadow:3px 3px 0 #000;margin:0 0 4px}
+.sub{color:#e9dccb;margin:0}
+h2{font:400 12px/1.6 var(--px);margin:0 0 10px}
+.panel{
+  background:var(--panel); padding:16px; display:grid; grid-template-columns:1fr 1.1fr; gap:18px;
+  border:4px solid; border-color:var(--hi) var(--lo) var(--lo) var(--hi); outline:4px solid #000;
+}
+@media(max-width:720px){.panel{grid-template-columns:1fr}}
+.inset{border:3px solid;border-color:var(--lo) var(--hi) var(--hi) var(--lo);background:var(--slot)}
+:focus-visible{outline:3px solid var(--gold);outline-offset:1px}
+footer{margin-top:18px;color:#e9dccb;font-size:13px}
