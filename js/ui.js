@@ -1,18 +1,12 @@
-import { REMOTE_BASE, USE_LOCAL, LOCAL_BASE, PLACEHOLDER, MAX_SLOTS_SHOWN } from "./config.js";
+import { IMAGES_BASE, cfg, PLACEHOLDER, MAX_SLOTS_SHOWN } from "./config.js";
 
 const $ = (id) => document.getElementById(id);
 const plural = (n, a, b) => `${n} ${n === 1 ? a : b}`;
 
-// Cadena de rutas: local -> remoto item/ -> remoto block/ -> placeholder
+// Imagen desde la CDN; si falla, muestra el placeholder local
 export function setIcon(img, id) {
-  const urls = [];
-  if (USE_LOCAL) urls.push(LOCAL_BASE + id.replace("/", "_") + ".png");
-  if (id.includes("/")) urls.push(`${REMOTE_BASE}${id}.png`);
-  else urls.push(`${REMOTE_BASE}item/${id}.png`, `${REMOTE_BASE}block/${id}.png`);
-  urls.push(PLACEHOLDER);
-  let i = 0;
-  img.onerror = () => { if (++i < urls.length) img.src = urls[i]; else img.onerror = null; };
-  img.src = urls[0];
+  img.onerror = () => { img.onerror = null; img.src = PLACEHOLDER; };
+  img.src = `${IMAGES_BASE}/${cfg.imgVersion}/${id}.png`;
 }
 
 export function renderGrid(items, selectedId, onPick) {
@@ -24,7 +18,7 @@ export function renderGrid(items, selectedId, onPick) {
   }
   for (const it of items) {
     const b = document.createElement("button");
-    b.type = "button"; b.className = "tile"; b.title = it.name;
+    b.type = "button"; b.className = "tile"; b.title = it.en && it.en !== it.name ? `${it.name} (${it.en})` : it.name;
     b.setAttribute("aria-label", `${it.name}, stack de ${it.stack}`);
     b.setAttribute("aria-pressed", it.id === selectedId);
     const img = document.createElement("img");

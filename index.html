@@ -8,9 +8,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="Css/base.css">
-  <link rel="stylesheet" href="Css/components.css">
-  <link rel="stylesheet" href="Css/animations.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/animations.css">
 </head>
 <body>
   <main class="wrap">
@@ -27,6 +27,7 @@
         <h2>1. Item</h2>
         <input type="text" id="q" placeholder="Buscar item…" autocomplete="off" aria-label="Buscar item">
         <div class="chips" id="chips"></div>
+        <p class="status" id="status" aria-live="polite"></p>
         <div class="grid inset" id="grid" role="list"></div>
       </div>
 
@@ -52,7 +53,7 @@
         <p class="note" id="note"></p>
       </div>
     </section>
-    <footer>Texturas: espejo de PrismarineJS/minecraft-assets (© Mojang). Proyecto de fans, sin relación con Mojang ni Microsoft.</footer>
+    <footer>Datos: PrismarineJS/minecraft-data. Imágenes: mcitemgallery.com (© Mojang). Proyecto de fans, sin relación con Mojang ni Microsoft.</footer>
   </main>
   <script type="module" src="js/main.js"></script>
 </body>
