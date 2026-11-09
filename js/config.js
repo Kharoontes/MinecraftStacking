@@ -7,6 +7,12 @@ export const ITEMS_APIS = [
   "https://cdn.jsdelivr.net/npm/minecraft-data@3.102.2/minecraft-data/data/pc/1.21.8/items.json"
 ];
 
+// Nombres oficiales de Mojang (archivos de idioma del juego):
+// manifiesto -> versión -> asset index -> minecraft/lang/{LANG_CODE}.json en el CDN de assets
+export const MOJANG_MANIFEST = "https://piston-meta.mojang.com/mc/game/version_manifest_v2.json";
+export const MOJANG_RESOURCES = "https://resources.download.minecraft.net";
+export const LANG_CODE = "es_es";   // otros: en_us, es_mx, pt_br, fr_fr...
+
 // Iconos, fuente principal: Minecraft Item API (https://www.minecraftitems.xyz/wiki)
 // GET {ITEM_API}/api/item/{id}/size={N} -> PNG (items y bloques, sin llave de API)
 export const ITEM_API = "https://api.minecraftitems.xyz";

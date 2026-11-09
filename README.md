@@ -39,20 +39,17 @@ No se descarga nada: todo se pide a APIs públicas al abrir la página.
 | Dato | Fuente |
 | --- | --- |
 | Lista de items, nombres y stacks | [minecraft-data](https://github.com/PrismarineJS/minecraft-data) (1.21.8), desde GitHub, con unpkg y jsDelivr como respaldo |
+| Nombres de los items | Archivos de idioma oficiales de Mojang (`piston-meta.mojang.com` y `resources.download.minecraft.net`), en el idioma de `LANG_CODE` |
 | Imágenes de los items | [Minecraft Item API](https://www.minecraftitems.xyz/wiki) (`/api/item/{id}/size=3`), con [InventivetalentDev/minecraft-assets](https://github.com/InventivetalentDev/minecraft-assets) (rama 1.21.10) y [Minecraft Item Gallery](https://mcitemgallery.com/docs) como respaldo |
 
 - Cada icono se pide primero a Minecraft Item API. Si falla, prueba las texturas (`item/`, `block/` y caras como `_front`, `_side`, `_top`), luego la galería y al final `images/ui/placeholder.svg`.
 - El tamaño de las imágenes se cambia con `ITEM_API_SIZE` en `js/config.js`.
 - Los items más nuevos que la rama 1.21.10 pueden salir con placeholder.
 - Si la API de items no responde, se carga una lista reducida de items comunes.
-- Los nombres en español solo existen para los items más comunes. El resto aparece en inglés.
+- Los nombres salen del archivo de idioma de la última versión estable de Mojang (español por defecto; se cambia con `LANG_CODE` en `js/config.js`).
+- Si Mojang no responde, se usa un diccionario propio en español para los items comunes y el nombre en inglés para el resto.
+- Mojang no publica una API de imágenes ni de stacks, por eso esos datos vienen de otras fuentes.
 
-## Cómo modificarla
-
-- **Cambiar la versión de los datos:** edita `ITEMS_APIS` en `js/config.js`.
-- **Agregar nombres en español:** añade líneas al objeto `ES` en `js/data.js` con el formato `id_del_item: "Nombre"`.
-- **Cambiar colores:** variables al inicio de `css/base.css`.
-- **Cambiar animaciones:** `css/animations.css`.
 
 ## Créditos y aviso
 

@@ -1,4 +1,4 @@
-import { ITEMS_APIS } from "./config.js";
+import { ITEMS_APIS, MOJANG_MANIFEST, MOJANG_RESOURCES, LANG_CODE } from "./config.js";
 
 // Nombres en español para los items más comunes (el resto se muestra con su nombre en inglés)
 const ES = {
@@ -43,7 +43,32 @@ const FALLBACK = [
 
 const pretty = (id) => id.split("_").filter(Boolean).map((w) => w[0].toUpperCase() + w.slice(1)).join(" ");
 const sortEs = (a, b) => a.name.localeCompare(b.name, "es");
-const mk = (id, stack, en) => ({ id, stack, en: en || pretty(id), name: ES[id] || en || pretty(id) });
+// Prioridad del nombre: Mojang (idioma) > diccionario propio > inglés
+const mk = (id, stack, en, lang) => ({
+  id, stack, en: en || pretty(id),
+  name: lang?.[`item.minecraft.${id}`] || lang?.[`block.minecraft.${id}`] || ES[id] || en || pretty(id)
+});
+
+async function getJson(url) {
+  const r = await fetch(url);
+  if (!r.ok) throw new Error(`HTTP ${r.status}`);
+  return r.json();
+}
+
+// Archivo de idioma oficial de Mojang para la última versión estable
+async function loadMojangNames() {
+  try {
+    const manifest = await getJson(MOJANG_MANIFEST);
+    const ver = manifest.versions.find((v) => v.id === manifest.latest.release);
+    const index = await getJson((await getJson(ver.url)).assetIndex.url);
+    const obj = index.objects[`minecraft/lang/${LANG_CODE}.json`];
+    if (!obj) throw new Error(`sin archivo de idioma ${LANG_CODE}`);
+    return await getJson(`${MOJANG_RESOURCES}/${obj.hash.slice(0, 2)}/${obj.hash}`);
+  } catch (e) {
+    console.warn("Nombres de Mojang no disponibles:", e);
+    return null;
+  }
+}
 
 async function fetchFirst(urls) {
   for (const url of urls) {
@@ -61,14 +86,14 @@ async function fetchFirst(urls) {
 
 // Devuelve { items, fromApi }
 export async function loadItems() {
-  const data = await fetchFirst(ITEMS_APIS);
+  const [data, lang] = await Promise.all([fetchFirst(ITEMS_APIS), loadMojangNames()]);
   if (data) {
     const items = data
       .filter((i) => i.name && i.name !== "air" && i.stackSize > 0)
-      .map((i) => mk(i.name, i.stackSize, i.displayName))
+      .map((i) => mk(i.name, i.stackSize, i.displayName, lang))
       .sort(sortEs);
     return { items, fromApi: true };
   }
-  const items = FALLBACK.flatMap(([s, ids]) => ids.split(" ").map((id) => mk(id, s))).sort(sortEs);
+  const items = FALLBACK.flatMap(([s, ids]) => ids.split(" ").map((id) => mk(id, s, null, lang))).sort(sortEs);
   return { items, fromApi: false };
 }
