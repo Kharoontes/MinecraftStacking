@@ -1,4 +1,4 @@
-import { ITEMS_API } from "./config.js";
+import { ITEMS_APIS } from "./config.js";
 
 // Nombres en español para los items más comunes (el resto se muestra con su nombre en inglés)
 const ES = {
@@ -41,18 +41,30 @@ const FALLBACK = [
   [1, "diamond_sword netherite_sword diamond_pickaxe netherite_pickaxe diamond_axe diamond_shovel diamond_hoe diamond_helmet diamond_chestplate diamond_leggings diamond_boots netherite_chestplate iron_chestplate bow crossbow trident shield elytra totem_of_undying fishing_rod shears flint_and_steel water_bucket lava_bucket milk_bucket potion enchanted_book red_bed oak_boat minecart cake mushroom_stew saddle music_disc_13 compass clock"]
 ];
 
-const pretty = (id) => id.split("_").map((w) => w[0].toUpperCase() + w.slice(1)).join(" ");
+const pretty = (id) => id.split("_").filter(Boolean).map((w) => w[0].toUpperCase() + w.slice(1)).join(" ");
 const sortEs = (a, b) => a.name.localeCompare(b.name, "es");
 const mk = (id, stack, en) => ({ id, stack, en: en || pretty(id), name: ES[id] || en || pretty(id) });
 
+async function fetchFirst(urls) {
+  for (const url of urls) {
+    try {
+      const r = await fetch(url);
+      if (!r.ok) throw new Error(`HTTP ${r.status}`);
+      const data = await r.json();
+      if (Array.isArray(data) && data.length) return data;
+    } catch (e) {
+      console.warn("API de items no disponible:", url, e);
+    }
+  }
+  return null;
+}
+
 // Devuelve { items, fromApi }
 export async function loadItems() {
-  const [res] = await Promise.allSettled([
-    fetch(ITEMS_API).then((r) => { if (!r.ok) throw new Error(r.status); return r.json(); })
-  ]);
-  if (res.status === "fulfilled" && Array.isArray(res.value)) {
-    const items = res.value
-      .filter((i) => i.name !== "air" && i.stackSize > 0)
+  const data = await fetchFirst(ITEMS_APIS);
+  if (data) {
+    const items = data
+      .filter((i) => i.name && i.name !== "air" && i.stackSize > 0)
       .map((i) => mk(i.name, i.stackSize, i.displayName))
       .sort(sortEs);
     return { items, fromApi: true };

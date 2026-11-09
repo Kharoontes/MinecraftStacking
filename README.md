@@ -38,7 +38,7 @@ No se descarga nada: todo se pide a APIs públicas al abrir la página.
 
 | Dato | Fuente |
 | --- | --- |
-| Lista de items, nombres y stacks | [minecraft-data](https://github.com/PrismarineJS/minecraft-data), vía jsDelivr (versión 1.21.8) |
+| Lista de items, nombres y stacks | [minecraft-data](https://github.com/PrismarineJS/minecraft-data) (1.21.8), desde GitHub, con unpkg y jsDelivr como respaldo |
 | Imágenes de los items | [Minecraft Item API](https://www.minecraftitems.xyz/wiki) (`/api/item/{id}/size=3`), con [InventivetalentDev/minecraft-assets](https://github.com/InventivetalentDev/minecraft-assets) (rama 1.21.10) y [Minecraft Item Gallery](https://mcitemgallery.com/docs) como respaldo |
 
 - Cada icono se pide primero a Minecraft Item API. Si falla, prueba las texturas (`item/`, `block/` y caras como `_front`, `_side`, `_top`), luego la galería y al final `images/ui/placeholder.svg`.

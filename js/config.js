@@ -1,7 +1,11 @@
 // ---- APIs (sin llave, sin descargar nada) ----
-// Lista de items con stackSize y displayName: minecraft-data (vía jsDelivr, versión fijada)
-export const ITEMS_API =
-  "https://cdn.jsdelivr.net/npm/minecraft-data@3.102.2/minecraft-data/data/pc/1.21.8/items.json";
+// Lista de items con stackSize y displayName: minecraft-data (1.21.8).
+// Se prueban en orden hasta que una responda.
+export const ITEMS_APIS = [
+  "https://raw.githubusercontent.com/PrismarineJS/minecraft-data/master/data/pc/1.21.8/items.json",
+  "https://unpkg.com/minecraft-data@3.102.2/minecraft-data/data/pc/1.21.8/items.json",
+  "https://cdn.jsdelivr.net/npm/minecraft-data@3.102.2/minecraft-data/data/pc/1.21.8/items.json"
+];
 
 // Iconos, fuente principal: Minecraft Item API (https://www.minecraftitems.xyz/wiki)
 // GET {ITEM_API}/api/item/{id}/size={N} -> PNG (items y bloques, sin llave de API)
