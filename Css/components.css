@@ -1,0 +1,41 @@
+input,button{font:inherit}
+input[type=text],input[type=number]{
+  width:100%; padding:10px 12px; color:#fff; background:#2b2b2b; border-radius:0;
+  border:3px solid; border-color:var(--lo) var(--hi) var(--hi) var(--lo);
+}
+input::placeholder{color:#aaa}
+.chips{display:flex;gap:6px;margin:10px 0;flex-wrap:wrap}
+.chip{
+  padding:6px 10px; cursor:pointer; background:var(--panel); color:var(--ink); border-radius:0;
+  border:3px solid; border-color:var(--hi) var(--lo) var(--lo) var(--hi);
+}
+.chip[aria-pressed=true]{background:var(--grass);color:#fff;border-color:#7bc653 var(--grass-d) var(--grass-d) #7bc653}
+
+.grid{height:320px;overflow-y:auto;padding:6px;display:grid;grid-template-columns:repeat(auto-fill,minmax(56px,1fr));gap:4px;align-content:start}
+.tile{
+  position:relative; aspect-ratio:1; padding:6px; cursor:pointer; background:#7a7a7a; border-radius:0;
+  border:2px solid; border-color:var(--lo) var(--hi) var(--hi) var(--lo);
+}
+.tile img{width:100%;height:100%;object-fit:contain;image-rendering:pixelated;display:block}
+.tile:hover{background:#9a9a9a}
+.tile[aria-pressed=true]{background:var(--grass);border-color:#7bc653 var(--grass-d) var(--grass-d) #7bc653}
+.tile b{position:absolute;right:2px;bottom:1px;font:400 8px/1 var(--px);color:#fff;text-shadow:1px 1px 0 #000}
+.empty{grid-column:1/-1;padding:12px;color:#fff}
+
+.picked{display:flex;align-items:center;gap:12px;padding:10px;margin-bottom:14px;color:#fff;font:400 12px/1.6 var(--px)}
+.pimg{image-rendering:pixelated;flex:none}
+.field{margin-bottom:14px}
+.field label{display:block;margin-bottom:6px;font-weight:600}
+.out{padding:14px;color:#fff;margin-bottom:12px}
+.big{font:400 clamp(14px,3vw,19px)/1.7 var(--px);margin:0;text-shadow:2px 2px 0 #000;word-break:break-word}
+.big em{font-style:normal;color:var(--gold)}
+.meta{margin:10px 0 0;color:#eee;font-size:14px}
+.slots{display:grid;grid-template-columns:repeat(9,1fr);gap:3px}
+.slot{
+  position:relative; aspect-ratio:1; background:var(--slot); padding:3px;
+  border:2px solid; border-color:var(--lo) var(--hi) var(--hi) var(--lo);
+}
+.slot img{width:100%;height:100%;object-fit:contain;image-rendering:pixelated;display:block}
+.slot span{position:absolute;right:2px;bottom:1px;font:400 clamp(7px,1.6vw,10px)/1 var(--px);color:#fff;text-shadow:1px 1px 0 #000}
+.slot.part{background:#b79a4d}
+.note{font-size:13px;margin:8px 0 0;color:#444}
