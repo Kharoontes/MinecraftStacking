@@ -102,3 +102,56 @@ export function renderResult(total, stackSize, r, item) {
   }
   if (r.usados > MAX_SLOTS_SHOWN) note.textContent = "Se muestran los primeros 54 espacios (un cofre doble).";
 }
+
+// Panel lateral de crafteo. state: "loading" | "unavailable" | "ready"
+export function renderCraft(box, item, recipes, idx, state, h) {
+  box.innerHTML = "";
+  const msg = (t) => { const p = document.createElement("p"); p.className = "cmsg"; p.textContent = t; box.appendChild(p); };
+  if (!item) return msg("Elige un item para ver su crafteo.");
+  if (state === "loading") return msg("Cargando recetas…");
+  if (state === "unavailable") return msg("Las recetas no están disponibles ahora.");
+  if (!recipes.length) return msg("Este item no se craftea en una mesa de crafteo.");
+
+  const r = recipes[idx];
+  if (recipes.length > 1) {
+    const nav = document.createElement("div"); nav.className = "cnav";
+    const mkBtn = (t, d, label) => {
+      const b = document.createElement("button"); b.type = "button"; b.className = "chip";
+      b.textContent = t; b.setAttribute("aria-label", label); b.onclick = () => h.onNav(d); return b;
+    };
+    const lbl = document.createElement("span"); lbl.textContent = `Receta ${idx + 1} de ${recipes.length}`;
+    nav.append(mkBtn("‹", -1, "Receta anterior"), lbl, mkBtn("›", 1, "Receta siguiente"));
+    box.appendChild(nav);
+  }
+
+  const row = document.createElement("div"); row.className = "crow";
+  const grid = document.createElement("div"); grid.className = "cgrid";
+  r.cells.forEach((id, i) => {
+    let c;
+    if (id) {
+      c = document.createElement("button"); c.type = "button"; c.title = h.nameOf(id);
+      c.setAttribute("aria-label", h.nameOf(id)); c.onclick = () => h.onPick(id);
+      const img = document.createElement("img"); img.alt = ""; setIcon(img, id); c.appendChild(img);
+    } else c = document.createElement("div");
+    c.className = "cslot" + (id ? "" : " empty");
+    c.style.setProperty("--i", i);
+    grid.appendChild(c);
+  });
+  const arrow = document.createElement("span"); arrow.className = "carrow"; arrow.textContent = "→";
+  arrow.setAttribute("aria-hidden", "true");
+  const res = document.createElement("div"); res.className = "cslot cres"; res.title = item.name;
+  const rimg = document.createElement("img"); rimg.alt = item.name; setIcon(rimg, item.id); res.appendChild(rimg);
+  if (r.count > 1) { const c = document.createElement("span"); c.textContent = r.count; res.appendChild(c); }
+  row.append(grid, arrow, res);
+  box.appendChild(row);
+
+  const tipo = document.createElement("p"); tipo.className = "cnote";
+  tipo.textContent = r.shapeless ? "Sin forma: los ingredientes van en cualquier posición." : "Con forma: respeta la posición de la cuadrícula.";
+  box.appendChild(tipo);
+
+  const counts = {};
+  r.cells.forEach((id) => { if (id) counts[id] = (counts[id] || 0) + 1; });
+  const mats = document.createElement("p"); mats.className = "cnote";
+  mats.textContent = "Materiales: " + Object.entries(counts).map(([id, n]) => `${n}× ${h.nameOf(id)}`).join(", ");
+  box.appendChild(mats);
+}

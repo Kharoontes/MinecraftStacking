@@ -77,7 +77,7 @@ async function fetchFirst(urls) {
       const r = await fetch(url);
       if (!r.ok) throw new Error(`HTTP ${r.status}`);
       const data = await r.json();
-      if (Array.isArray(data) && data.length) return data;
+      if (data && (Array.isArray(data) ? data.length : Object.keys(data).length)) return data;
     } catch (e) {
       console.warn("API de items no disponible:", url, e);
     }
@@ -85,18 +85,55 @@ async function fetchFirst(urls) {
   return null;
 }
 
-// Devuelve { items, fromApi }
+// recipes.json de minecraft-data: { "<id del resultado>": [receta, ...] } con ids numéricos.
+// Una receta tiene `inShape` (con forma) o `ingredients` (sin forma); cada casilla puede ser
+// un número, null, [id, meta] o { id }. Se convierte a nombres y a una cuadrícula de 3x3.
+function buildRecipes(raw, idToName) {
+  const ref = (x) => {
+    if (x == null) return null;
+    const id = Array.isArray(x) ? x[0] : typeof x === "object" ? x.id : x;
+    return idToName[id] ?? null;
+  };
+  const out = {};
+  for (const [rid, list] of Object.entries(raw)) {
+    const name = idToName[rid];
+    if (!name || !Array.isArray(list)) continue;
+    const seen = new Set();
+    for (const r of list) {
+      const cells = Array(9).fill(null);
+      if (r.inShape) {
+        r.inShape.forEach((row, y) => row.forEach((c, x) => { if (y < 3 && x < 3) cells[y * 3 + x] = ref(c); }));
+      } else if (r.ingredients) {
+        r.ingredients.map(ref).filter(Boolean).slice(0, 9).forEach((id, i) => { cells[i] = id; });
+      } else continue;
+      const count = r.result && typeof r.result === "object" && !Array.isArray(r.result) ? r.result.count || 1 : 1;
+      const rec = { cells, count, shapeless: !r.inShape };
+      const key = JSON.stringify(rec);
+      if (seen.has(key) || !cells.some(Boolean)) continue;
+      seen.add(key);
+      (out[name] ??= []).push(rec);
+    }
+  }
+  return out;
+}
+
+// Devuelve { items, fromApi, recipes } (recipes es null si no se pudieron cargar)
 export async function loadItems() {
   const FOODS_APIS = ITEMS_APIS.map((u) => u.replace("items.json", "foods.json"));
-  const [data, lang, foodData] = await Promise.all([fetchFirst(ITEMS_APIS), loadMojangNames(), fetchFirst(FOODS_APIS)]);
+  const RECIPES_APIS = ITEMS_APIS.map((u) => u.replace("items.json", "recipes.json"));
+  const [data, lang, foodData, recipeData] = await Promise.all([
+    fetchFirst(ITEMS_APIS), loadMojangNames(), fetchFirst(FOODS_APIS), fetchFirst(RECIPES_APIS)
+  ]);
   const foods = new Set((foodData || []).map((f) => f.name));
   if (data) {
     const items = data
       .filter((i) => i.name && i.name !== "air" && i.stackSize > 0)
       .map((i) => mk(i.name, i.stackSize, i.displayName, lang, foods))
       .sort(sortEs);
-    return { items, fromApi: true };
+    const idToName = Object.fromEntries(data.map((i) => [i.id, i.name]));
+    const recipes = recipeData ? buildRecipes(recipeData, idToName) : null;
+    return { items, fromApi: true, recipes };
   }
   const items = FALLBACK.flatMap(([s, ids]) => ids.split(" ").map((id) => mk(id, s, null, lang, foods))).sort(sortEs);
-  return { items, fromApi: false };
+  return { items, fromApi: false, recipes: null };
 }

@@ -10,6 +10,7 @@ Ejemplo: 500 items de un item que se apila de 64 son **7 stacks y 52 items**.
 - Pestañas con icono por categoría (construcción, naturaleza, minerales, redstone, comida, combate, etc.).
 - Búsqueda en español e inglés, que revisa todas las categorías a la vez.
 - Muestra el resultado en stacks y items sueltos.
+- Panel lateral de crafteo: si el item se craftea, muestra la cuadrícula de 3×3, la cantidad que produce y los materiales. Si tiene varias recetas, se navega entre ellas, y al pulsar un ingrediente se abre ese item.
 - Dibuja los espacios del inventario y calcula cuántos cofres dobles o shulkers ocupa.
 - Animaciones suaves, desactivadas si el sistema pide reducir movimiento.
 
@@ -39,7 +40,7 @@ No se descarga nada: todo se pide a APIs públicas al abrir la página.
 
 | Dato | Fuente |
 | --- | --- |
-| Lista de items, nombres y stacks | [minecraft-data](https://github.com/PrismarineJS/minecraft-data) (1.21.8), desde GitHub, con unpkg y jsDelivr como respaldo |
+| Lista de items, stacks, comida y recetas de crafteo | [minecraft-data](https://github.com/PrismarineJS/minecraft-data) (1.21.8), desde GitHub, con unpkg y jsDelivr como respaldo |
 | Nombres de los items | Archivos de idioma oficiales de Mojang (`piston-meta.mojang.com` y `resources.download.minecraft.net`), en el idioma de `LANG_CODE` |
 | Imágenes de los items | [Minecraft Item API](https://www.minecraftitems.xyz/wiki) (`/api/item/{id}/size=3`), con [InventivetalentDev/minecraft-assets](https://github.com/InventivetalentDev/minecraft-assets) (rama 1.21.10) y [Minecraft Item Gallery](https://mcitemgallery.com/docs) como respaldo |
 
@@ -49,6 +50,7 @@ No se descarga nada: todo se pide a APIs públicas al abrir la página.
 - Si la API de items no responde, se carga una lista reducida de items comunes.
 - Los nombres salen del archivo de idioma de la última versión estable de Mojang (español por defecto; se cambia con `LANG_CODE` en `js/config.js`).
 - Si Mojang no responde, se usa un diccionario propio en español para los items comunes y el nombre en inglés para el resto.
+- Las recetas son solo de mesa de crafteo (no incluyen horno, herrería ni otras). Vienen de `recipes.json` de minecraft-data.
 - Las categorías no las publica ninguna API: se asignan con reglas por id y con `foods.json` de minecraft-data para la comida, así que alguna puede quedar en una pestaña aproximada.
 - Mojang no publica una API de imágenes ni de stacks, por eso esos datos vienen de otras fuentes.
 

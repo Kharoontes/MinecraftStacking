@@ -4,7 +4,7 @@
 @keyframes bump{0%{transform:scale(1)}40%{transform:scale(1.06)}100%{transform:scale(1)}}
 
 .panel{animation:rise .5s ease-out both}
-.slot{animation:pop .28s ease-out both;animation-delay:calc(var(--i,0) * 18ms)}
+.slot,.cslot{animation:pop .28s ease-out both;animation-delay:calc(var(--i,0) * 18ms)}
 .pimg.on{animation:bob 1.6s ease-in-out infinite}
 .big.bump{animation:bump .25s ease-out}
 .tile,.tab{transition:transform .08s,background .12s}

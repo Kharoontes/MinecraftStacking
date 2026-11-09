@@ -1,11 +1,11 @@
 import { loadItems } from "./data.js";
 import { calcular } from "./calc.js";
 import { CATEGORIES } from "./categories.js";
-import { renderGrid, showPicked, renderResult, buildTabs, updateTabs } from "./ui.js";
+import { renderGrid, showPicked, renderResult, buildTabs, updateTabs, renderCraft } from "./ui.js";
 
 const $ = (id) => document.getElementById(id);
 const q = $("q"), nEl = $("n");
-let cat = "all", picked = null, ITEMS = [];
+let cat = "all", picked = null, ITEMS = [], BY_ID = {}, RECIPES = null, recState = "loading", ri = 0;
 
 const norm = (t) => t.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 
@@ -15,9 +15,18 @@ function counts() {
   return c;
 }
 
+function drawCraft() {
+  const list = (RECIPES && picked && RECIPES[picked.id]) || [];
+  renderCraft($("craft"), picked, list, ri, recState, {
+    nameOf: (id) => BY_ID[id]?.name || id,
+    onPick: (id) => { if (BY_ID[id]) pick(BY_ID[id]); },
+    onNav: (d) => { ri = (ri + d + list.length) % list.length; drawCraft(); }
+  });
+}
+
 function pick(it) {
-  picked = it;
-  showPicked(it); refreshGrid(); update(); nEl.focus();
+  picked = it; ri = 0;
+  showPicked(it); drawCraft(); refreshGrid(); update(); nEl.focus();
 }
 
 // Con texto en el buscador se busca en todas las categorías
@@ -53,9 +62,12 @@ updateTabs(CATEGORIES, cat, counts());
 q.addEventListener("input", refreshGrid);
 nEl.addEventListener("input", update);
 $("grid").innerHTML = '<p class="empty">Cargando items desde la API…</p>';
-update();
-loadItems().then(({ items }) => {
+update(); drawCraft();
+loadItems().then(({ items, recipes }) => {
   ITEMS = items;
+  BY_ID = Object.fromEntries(items.map((i) => [i.id, i]));
+  RECIPES = recipes; recState = recipes ? "ready" : "unavailable";
+  drawCraft();
   updateTabs(CATEGORIES, cat, counts());
   refreshGrid();
 });
