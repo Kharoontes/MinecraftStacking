@@ -56,17 +56,25 @@ export function renderGrid(items, selectedId, onPick) {
     b.setAttribute("aria-label", `${it.name}, stack de ${it.stack}`);
     b.setAttribute("aria-pressed", it.id === selectedId);
     const img = document.createElement("img");
-    img.loading = "lazy"; img.alt = ""; setIcon(img, it.id);
+    img.loading = "lazy"; img.alt = ""; setIcon(img, it.icon || it.id);
     const tag = document.createElement("b"); tag.textContent = it.stack > 1 ? it.stack : "";
     b.append(img, tag);
+    if (it.color) b.appendChild(dot(it.color));
     b.onclick = () => onPick(it);
     grid.appendChild(b);
   }
 }
 
+// Punto de color para distinguir los efectos de las pociones
+function dot(color) {
+  const d = document.createElement("i"); d.className = "dot"; d.style.background = color; return d;
+}
+
 export function showPicked(it) {
   const img = $("pickedImg");
-  setIcon(img, it.id);
+  $("picked").querySelector(".dot")?.remove();
+  if (it.color) $("picked").appendChild(dot(it.color));
+  setIcon(img, it.icon || it.id);
   img.classList.add("on");
   $("pickedName").textContent = `${it.name} · stack de ${it.stack}`;
 }
@@ -96,7 +104,7 @@ export function renderResult(total, stackSize, r, item) {
     const d = document.createElement("div");
     d.className = "slot" + (parcial ? " part" : "");
     d.style.setProperty("--i", i);
-    if (item) { const img = document.createElement("img"); img.alt = ""; setIcon(img, item.id); d.appendChild(img); }
+    if (item) { const img = document.createElement("img"); img.alt = ""; setIcon(img, item.icon || item.id); d.appendChild(img); }
     const c = document.createElement("span"); c.textContent = parcial ? r.resto : stackSize;
     d.appendChild(c); slots.appendChild(d);
   }
@@ -140,7 +148,7 @@ export function renderCraft(box, item, recipes, idx, state, h) {
   const arrow = document.createElement("span"); arrow.className = "carrow"; arrow.textContent = "→";
   arrow.setAttribute("aria-hidden", "true");
   const res = document.createElement("div"); res.className = "cslot cres"; res.title = item.name;
-  const rimg = document.createElement("img"); rimg.alt = item.name; setIcon(rimg, item.id); res.appendChild(rimg);
+  const rimg = document.createElement("img"); rimg.alt = item.name; setIcon(rimg, item.icon || item.id); res.appendChild(rimg);
   if (r.count > 1) { const c = document.createElement("span"); c.textContent = r.count; res.appendChild(c); }
   row.append(grid, arrow, res);
   box.appendChild(row);

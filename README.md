@@ -27,6 +27,7 @@ js/
   data.js           carga de items (API) y lista de respaldo
   calc.js           cálculo de stacks
   categories.js     categorías de los items (reglas por id)
+  potions.js        variantes de pociones y flechas con efecto
   ui.js             dibujo de la pantalla e imágenes
   main.js           eventos y lógica principal
 images/ui/          logo, favicon y placeholder
@@ -50,6 +51,7 @@ No se descarga nada: todo se pide a APIs públicas al abrir la página.
 - Si la API de items no responde, se carga una lista reducida de items comunes.
 - Los nombres salen del archivo de idioma de la última versión estable de Mojang (español por defecto; se cambia con `LANG_CODE` en `js/config.js`).
 - Si Mojang no responde, se usa un diccionario propio en español para los items comunes y el nombre en inglés para el resto.
+- Las pociones se generan por efecto (curación, fuerza, veneno…) en `js/potions.js`, porque en la lista de items son un solo item. Sus nombres salen del archivo de idioma de Mojang y el punto de color de cada una es aproximado.
 - Las recetas son solo de mesa de crafteo (no incluyen horno, herrería ni otras). Vienen de `recipes.json` de minecraft-data.
 - Las categorías no las publica ninguna API: se asignan con reglas por id y con `foods.json` de minecraft-data para la comida, así que alguna puede quedar en una pestaña aproximada.
 - Mojang no publica una API de imágenes ni de stacks, por eso esos datos vienen de otras fuentes.

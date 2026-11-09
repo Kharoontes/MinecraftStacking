@@ -1,4 +1,5 @@
 import { categorize } from "./categories.js";
+import { potionItems } from "./potions.js";
 import { ITEMS_APIS, MOJANG_MANIFEST, MOJANG_RESOURCES, LANG_CODE } from "./config.js";
 
 // Nombres en español para los items más comunes (el resto se muestra con su nombre en inglés)
@@ -49,6 +50,12 @@ const mk = (id, stack, en, lang, foods) => ({
   id, stack, en: en || pretty(id), cat: categorize(id, foods),
   name: lang?.[`item.minecraft.${id}`] || lang?.[`block.minecraft.${id}`] || ES[id] || en || pretty(id)
 });
+
+// Añade las variantes de pociones sin duplicar items que ya vengan de la API
+function withPotions(items, lang) {
+  const have = new Set(items.map((i) => i.id));
+  return items.concat(potionItems(lang).filter((p) => !have.has(p.id))).sort(sortEs);
+}
 
 async function getJson(url) {
   const r = await fetch(url);
@@ -128,12 +135,11 @@ export async function loadItems() {
   if (data) {
     const items = data
       .filter((i) => i.name && i.name !== "air" && i.stackSize > 0)
-      .map((i) => mk(i.name, i.stackSize, i.displayName, lang, foods))
-      .sort(sortEs);
+      .map((i) => mk(i.name, i.stackSize, i.displayName, lang, foods));
     const idToName = Object.fromEntries(data.map((i) => [i.id, i.name]));
     const recipes = recipeData ? buildRecipes(recipeData, idToName) : null;
-    return { items, fromApi: true, recipes };
+    return { items: withPotions(items, lang), fromApi: true, recipes };
   }
-  const items = FALLBACK.flatMap(([s, ids]) => ids.split(" ").map((id) => mk(id, s, null, lang, foods))).sort(sortEs);
-  return { items, fromApi: false, recipes: null };
+  const items = FALLBACK.flatMap(([s, ids]) => ids.split(" ").map((id) => mk(id, s, null, lang, foods)));
+  return { items: withPotions(items, lang), fromApi: false, recipes: null };
 }
