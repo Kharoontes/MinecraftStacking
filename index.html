@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Calculadora de stacks de Minecraft</title>
+  <link rel="icon" href="images/ui/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/animations.css">
+</head>
+<body>
+  <main class="wrap">
+    <header class="head">
+      <img src="images/ui/logo.svg" alt="" width="56" height="56" class="logo">
+      <div>
+        <h1>Calculadora de stacks</h1>
+        <p class="sub">Elige un item, escribe la cantidad y mira cuántos stacks e items sueltos son.</p>
+      </div>
+    </header>
+
+    <section class="panel">
+      <div class="col">
+        <h2>1. Item</h2>
+        <input type="text" id="q" placeholder="Buscar item…" autocomplete="off" aria-label="Buscar item">
+        <div class="chips" id="chips"></div>
+        <div class="grid inset" id="grid" role="list"></div>
+      </div>
+
+      <div class="col">
+        <h2>2. Cantidad</h2>
+        <div class="picked inset" id="picked">
+          <img id="pickedImg" class="pimg" alt="" width="48" height="48" src="images/ui/placeholder.svg">
+          <span id="pickedName">Ningún item elegido</span>
+        </div>
+        <div class="field">
+          <label for="n">Cantidad total de items</label>
+          <input type="number" id="n" min="0" step="1" inputmode="numeric" placeholder="Ej: 500">
+        </div>
+        <div class="field">
+          <label for="s">Items por stack (puedes cambiarlo)</label>
+          <input type="number" id="s" min="1" step="1" inputmode="numeric" value="64">
+        </div>
+        <div class="out inset" aria-live="polite">
+          <p class="big" id="big">Escribe una cantidad</p>
+          <p class="meta" id="meta"></p>
+        </div>
+        <div class="slots" id="slots"></div>
+        <p class="note" id="note"></p>
+      </div>
+    </section>
+    <footer>Texturas: espejo de PrismarineJS/minecraft-assets (© Mojang). Proyecto de fans, sin relación con Mojang ni Microsoft.</footer>
+  </main>
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
