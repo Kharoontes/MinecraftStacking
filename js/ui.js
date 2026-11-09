@@ -1,12 +1,13 @@
-import { TEXTURES_BASE, GALLERY_BASE, ALIASES, PLACEHOLDER, MAX_SLOTS_SHOWN } from "./config.js";
+import { ITEM_API, ITEM_API_SIZE, TEXTURES_BASE, GALLERY_BASE, ALIASES, PLACEHOLDER, MAX_SLOTS_SHOWN } from "./config.js";
 
 const $ = (id) => document.getElementById(id);
 const plural = (n, a, b) => `${n} ${n === 1 ? a : b}`;
 
-// Rutas candidatas, en orden: item -> block (y sus caras) -> galería -> placeholder
+// Rutas candidatas, en orden: API de items -> texturas (item, block y caras) -> galería -> placeholder
 function candidates(id) {
   const n = ALIASES[id] || id, t = TEXTURES_BASE;
   return [
+    `${ITEM_API}/api/item/${id}/size=${ITEM_API_SIZE}`,
     `${t}/item/${n}.png`, `${t}/block/${n}.png`, `${t}/item/${n}_00.png`,
     `${t}/block/${n}_front.png`, `${t}/block/${n}_side.png`, `${t}/block/${n}_top.png`,
     `${GALLERY_BASE}/${id}.png`, PLACEHOLDER

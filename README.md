@@ -39,9 +39,10 @@ No se descarga nada: todo se pide a APIs públicas al abrir la página.
 | Dato | Fuente |
 | --- | --- |
 | Lista de items, nombres y stacks | [minecraft-data](https://github.com/PrismarineJS/minecraft-data), vía jsDelivr (versión 1.21.8) |
-| Imágenes de los items | [InventivetalentDev/minecraft-assets](https://github.com/InventivetalentDev/minecraft-assets) (rama 1.21.10), con [Minecraft Item Gallery](https://mcitemgallery.com/docs) como respaldo |
+| Imágenes de los items | [Minecraft Item API](https://www.minecraftitems.xyz/wiki) (`/api/item/{id}/size=3`), con [InventivetalentDev/minecraft-assets](https://github.com/InventivetalentDev/minecraft-assets) (rama 1.21.10) y [Minecraft Item Gallery](https://mcitemgallery.com/docs) como respaldo |
 
-- Cada icono prueba varias rutas (`item/`, `block/` y caras como `_front`, `_side`, `_top`), luego la galería de respaldo y al final `images/ui/placeholder.svg`.
+- Cada icono se pide primero a Minecraft Item API. Si falla, prueba las texturas (`item/`, `block/` y caras como `_front`, `_side`, `_top`), luego la galería y al final `images/ui/placeholder.svg`.
+- El tamaño de las imágenes se cambia con `ITEM_API_SIZE` en `js/config.js`.
 - Los items más nuevos que la rama 1.21.10 pueden salir con placeholder.
 - Si la API de items no responde, se carga una lista reducida y se avisa en pantalla.
 - Los nombres en español solo existen para los items más comunes. El resto aparece en inglés.
