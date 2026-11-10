@@ -51,22 +51,27 @@ input::placeholder{color:#aaa}
 .tab[aria-selected=true]{background:var(--grass);border-color:#7bc653 var(--grass-d) var(--grass-d) #7bc653}
 
 /* Panel de crafteo */
-.craftbox{padding:12px;color:#fff;min-height:200px}
+.craftbox{padding:12px;color:#fff;min-height:290px}
 .cmsg{margin:0;color:#eee}
-.cnav{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px;font-size:14px}
+.cnav{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px;font-size:14px;min-height:36px}
 .cnav .chip{padding:2px 12px;font-size:18px;line-height:1.2}
 .crow{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:nowrap}
-/* Cuadrícula 3x3 con las casillas pegadas, como en el juego */
-.cgrid{display:grid;grid-template-columns:repeat(3,44px);grid-auto-rows:44px;gap:0;flex:none}
+/* Cuadrícula 3x3 de tamaño fijo (132x132): nada de lo que contenga puede deformarla */
+.cgrid{
+  display:grid; flex:none; width:132px; height:132px; overflow:hidden;
+  grid-template-columns:repeat(3,44px); grid-template-rows:repeat(3,44px); gap:0;
+}
 .cslot{
-  position:relative;width:44px;height:44px;padding:5px;margin:0;background:var(--slot);border-radius:0;
-  display:block;flex:none;
-  border:2px solid;border-color:var(--lo) var(--hi) var(--hi) var(--lo);
+  position:relative; box-sizing:border-box; width:44px; height:44px; min-width:44px; min-height:44px;
+  margin:0; padding:0; overflow:hidden; background:var(--slot); border-radius:0; display:block; flex:none;
+  border:2px solid; border-color:var(--lo) var(--hi) var(--hi) var(--lo);
 }
 button.cslot{cursor:pointer}
 button.cslot:hover{background:#a5a5a5}
-.cslot img{width:100%;height:100%;object-fit:contain;image-rendering:pixelated;display:block}
-.cres{width:56px;height:56px;padding:7px}
+/* La imagen va en absoluto: su tamaño nunca afecta al de la casilla */
+.cslot img{position:absolute;inset:3px;width:calc(100% - 6px);height:calc(100% - 6px);object-fit:contain;image-rendering:pixelated}
+.cres{width:56px;height:56px;min-width:56px;min-height:56px}
+.cres img{inset:6px;width:calc(100% - 12px);height:calc(100% - 12px)}
 .cres span{position:absolute;right:2px;bottom:1px;font:400 10px/1 var(--px);color:#fff;text-shadow:1px 1px 0 #000}
 .carrow{flex:none;font:400 18px/1 var(--px);color:#555;text-shadow:none}
 .cnote{margin:10px 0 0;font-size:13px;color:#eee}

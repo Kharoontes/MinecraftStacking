@@ -121,15 +121,15 @@ export function renderCraft(box, item, recipes, idx, state, h) {
   if (!recipes.length) return msg("Este item no se craftea en una mesa de crafteo.");
 
   const r = recipes[idx];
+  // La barra de recetas siempre ocupa su espacio para que el panel no cambie de tamaño
+  const nav = document.createElement("div"); nav.className = "cnav"; box.appendChild(nav);
   if (recipes.length > 1) {
-    const nav = document.createElement("div"); nav.className = "cnav";
     const mkBtn = (t, d, label) => {
       const b = document.createElement("button"); b.type = "button"; b.className = "chip";
       b.textContent = t; b.setAttribute("aria-label", label); b.onclick = () => h.onNav(d); return b;
     };
     const lbl = document.createElement("span"); lbl.textContent = `Receta ${idx + 1} de ${recipes.length}`;
     nav.append(mkBtn("‹", -1, "Receta anterior"), lbl, mkBtn("›", 1, "Receta siguiente"));
-    box.appendChild(nav);
   }
 
   const row = document.createElement("div"); row.className = "crow";
@@ -143,6 +143,9 @@ export function renderCraft(box, item, recipes, idx, state, h) {
     } else c = document.createElement("div");
     c.className = "cslot" + (id ? "" : " blank");
     c.style.setProperty("--i", i);
+    // Posición fija: la cuadrícula siempre es 3x3, sin importar la receta
+    c.style.gridColumn = String((i % 3) + 1);
+    c.style.gridRow = String(Math.floor(i / 3) + 1);
     grid.appendChild(c);
   });
   const arrow = document.createElement("span"); arrow.className = "carrow"; arrow.textContent = "→";
