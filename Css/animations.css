@@ -5,6 +5,7 @@
 
 .panel{animation:rise .5s ease-out both}
 .slot,.cslot{animation:pop .28s ease-out both;animation-delay:calc(var(--i,0) * 18ms)}
+.nobox{animation:pop .3s ease-out both}
 .pimg.on{animation:bob 1.6s ease-in-out infinite}
 .big.bump{animation:bump .25s ease-out}
 .tile,.tab{transition:transform .08s,background .12s}

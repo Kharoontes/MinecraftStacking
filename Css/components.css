@@ -51,8 +51,10 @@ input::placeholder{color:#aaa}
 .tab[aria-selected=true]{background:var(--grass);border-color:#7bc653 var(--grass-d) var(--grass-d) #7bc653}
 
 /* Panel de crafteo */
-.craftbox{padding:12px;color:#fff;min-height:290px}
-.cmsg{margin:0;color:#eee}
+.craftbox{padding:12px;min-height:290px}
+/* Fondo claro: así todas las casillas (con o sin objeto) se distinguen igual */
+.craftbox.inset{background:var(--panel);color:var(--ink)}
+.cmsg{margin:0}
 .cnav{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px;font-size:14px;min-height:36px}
 .cnav .chip{padding:2px 12px;font-size:18px;line-height:1.2}
 .crow{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:nowrap}
@@ -63,8 +65,8 @@ input::placeholder{color:#aaa}
 }
 .cslot{
   position:relative; box-sizing:border-box; width:44px; height:44px; min-width:44px; min-height:44px;
-  margin:0; padding:0; overflow:hidden; background:var(--slot); border-radius:0; display:block; flex:none;
-  border:2px solid; border-color:var(--lo) var(--hi) var(--hi) var(--lo);
+  margin:0; padding:0; overflow:hidden; background:#8b8b8b; border-radius:0; display:block; flex:none;
+  border:2px solid; border-color:#373737 #fff #fff #373737;
 }
 button.cslot{cursor:pointer}
 button.cslot:hover{background:#a5a5a5}
@@ -74,9 +76,19 @@ button.cslot:hover{background:#a5a5a5}
 .cres img{inset:6px;width:calc(100% - 12px);height:calc(100% - 12px)}
 .cres span{position:absolute;right:2px;bottom:1px;font:400 10px/1 var(--px);color:#fff;text-shadow:1px 1px 0 #000}
 .carrow{flex:none;font:400 18px/1 var(--px);color:#555;text-shadow:none}
-.cnote{margin:10px 0 0;font-size:13px;color:#eee}
+.cnote{margin:10px 0 0;font-size:13px}
 
 /* Punto de color de los efectos de pociones */
 .dot{position:absolute;left:3px;top:3px;width:10px;height:10px;border:2px solid #000;border-radius:50%}
 .picked{position:relative}
 .picked .dot{left:auto;right:10px;top:10px;width:14px;height:14px}
+
+/* Item sin crafteo: icono con señal de prohibido */
+.cno{display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px;padding:18px 4px}
+.nobox{position:relative;width:96px;height:96px}
+.nobox img{position:absolute;inset:16px;width:64px;height:64px;object-fit:contain;image-rendering:pixelated;filter:grayscale(.4) opacity(.75)}
+.nobox::before{content:"";position:absolute;inset:4px;border:8px solid #d62828;border-radius:50%}
+.nobox::after{content:"";position:absolute;left:50%;top:50%;width:76px;height:8px;background:#d62828;transform:translate(-50%,-50%) rotate(-45deg)}
+.ctitle{font:400 12px/1.6 var(--px);margin:0}
+.ctitle.creative{background:#5b2d8c;color:#fff;padding:6px 10px;border:2px solid;border-color:#9a63d1 #2f1550 #2f1550 #9a63d1}
+.cno .cnote{margin:0}

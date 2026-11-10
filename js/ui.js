@@ -1,3 +1,4 @@
+import { isCreativeOnly } from "./categories.js";
 import { ITEM_API, ITEM_API_SIZE, TEXTURES_BASE, GALLERY_BASE, ALIASES, PLACEHOLDER, MAX_SLOTS_SHOWN } from "./config.js";
 
 const $ = (id) => document.getElementById(id);
@@ -118,7 +119,7 @@ export function renderCraft(box, item, recipes, idx, state, h) {
   if (!item) return msg("Elige un item para ver su crafteo.");
   if (state === "loading") return msg("Cargando recetas…");
   if (state === "unavailable") return msg("Las recetas no están disponibles ahora.");
-  if (!recipes.length) return msg("Este item no se craftea en una mesa de crafteo.");
+  if (!recipes.length) return renderNoCraft(box, item);
 
   const r = recipes[idx];
   // La barra de recetas siempre ocupa su espacio para que el panel no cambie de tamaño
@@ -165,4 +166,23 @@ export function renderCraft(box, item, recipes, idx, state, h) {
   const mats = document.createElement("p"); mats.className = "cnote";
   mats.textContent = "Materiales: " + Object.entries(counts).map(([id, n]) => `${n}× ${h.nameOf(id)}`).join(", ");
   box.appendChild(mats);
+}
+
+// Item sin receta: se muestra con una señal de prohibido y un título
+function renderNoCraft(box, item) {
+  const wrap = document.createElement("div"); wrap.className = "cno";
+  const sign = document.createElement("div"); sign.className = "nobox"; sign.setAttribute("aria-hidden", "true");
+  const img = document.createElement("img"); img.alt = ""; setIcon(img, item.icon || item.id);
+  sign.appendChild(img);
+
+  const creative = isCreativeOnly(item.id);
+  const title = document.createElement("p");
+  title.className = "ctitle" + (creative ? " creative" : "");
+  title.textContent = creative ? "Solo modo creativo" : "Sin receta de crafteo";
+  const note = document.createElement("p"); note.className = "cnote";
+  note.textContent = creative
+    ? "No se puede conseguir ni craftear en supervivencia."
+    : "Este item no se hace en una mesa de crafteo.";
+  wrap.append(sign, title, note);
+  box.appendChild(wrap);
 }

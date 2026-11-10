@@ -42,3 +42,9 @@ export function categorize(id, foods) {
   }
   return "varios";
 }
+
+// Items que no se pueden conseguir en supervivencia sin comandos (solo inventario creativo).
+// Lista manual: ninguna API la publica, así que puede faltar algún item.
+const CREATIVE_ONLY = /^(command_block|chain_command_block|repeating_command_block|command_block_minecart|structure_block|structure_void|jigsaw|barrier|light|debug_stick|knowledge_book|bedrock|end_portal_frame|spawner|trial_spawner|vault|reinforced_deepslate|budding_amethyst|petrified_oak_slab|test_block|test_instance_block|farmland|player_head|infested_.+|.+_spawn_egg)$/;
+
+export const isCreativeOnly = (id) => CREATIVE_ONLY.test(id);
