@@ -141,7 +141,7 @@ export function renderCraft(box, item, recipes, idx, state, h) {
       c.setAttribute("aria-label", h.nameOf(id)); c.onclick = () => h.onPick(id);
       const img = document.createElement("img"); img.alt = ""; setIcon(img, id); c.appendChild(img);
     } else c = document.createElement("div");
-    c.className = "cslot" + (id ? "" : " empty");
+    c.className = "cslot" + (id ? "" : " blank");
     c.style.setProperty("--i", i);
     grid.appendChild(c);
   });
